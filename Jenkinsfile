@@ -3,7 +3,15 @@ node {
    def dockerHome
    def dockerImage
    stage('GIT checkout') {
-      git 'https://github.com/amohane/moviecatlog-configuration-server.git'
+    checkout([$class: 'GitSCM', 
+   	branches: [[name: "${tag_branch}"]], 
+   	browser: [$class: 'GithubWeb', 
+   	repoUrl: 'https://github.com/amohane/moviecatlog-configuration-server'], 
+   	doGenerateSubmoduleConfigurations: false, 
+   	extensions: [], 
+   	submoduleCfg: [], 
+   	userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/amohane/moviecatlog-configuration-server.git']]])
+      //git 'https://github.com/amohane/moviecatlog-configuration-server.git'
       // Get the Maven tool.
       // ** NOTE: This 'M3' Maven tool must be configured
       // **       in the global configuration.           
@@ -21,9 +29,9 @@ node {
       }
    }
    stage('Build Docker Image'){
-      dockerImage=docker.build("amohane/moviecatlog-configuration-server:${BUILD_NUMBER}")
+      dockerImage=docker.build("amohane/moviecatlog-configuration-server:${tag_branch}")
    }
    stage('Push Docker Image'){
-       dockerImaqge.push("${BUILD_NUMBER}")
+       dockerImaqge.push("${tag_branch}")
    }
 }
