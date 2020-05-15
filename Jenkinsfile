@@ -32,6 +32,6 @@ node {
       dockerImage=docker.build("amohane/moviecatlog-configuration-server:${tag_branch}")
    }
    stage('Push Docker Image'){
-       dockerImaqge.push("${tag_branch}")
+       dockerImage.push("${tag_branch}")
    }
 }
